@@ -1,6 +1,6 @@
-export const mainPage = {
-    clickMenuItem(args){
-        cy.contains(args).click();
+export const MainPage = {
+    clickMenuSubItem(args){
+        cy.get(args).click();
         cy.wait(1000);
     }
 }

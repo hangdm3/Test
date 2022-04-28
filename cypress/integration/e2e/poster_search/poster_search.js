@@ -1,26 +1,31 @@
-import { Given, When, Then, And } from 'cypress-cucumber-preprocessor/steps'
+const {Given} = require('cypress-cucumber-preprocessor/steps');
+const {When} = require('cypress-cucumber-preprocessor/steps');
+const {Then} = require('cypress-cucumber-preprocessor/steps');
+const {And} = require('cypress-cucumber-preprocessor/steps');
+const {LoginPage} = require("../../../pageobjects/login_page");
+const {MainPage} = require("../../../pageobjects/main_page");
 
-const loginPage = new loginPage();
-const mainPage = new mainPage();
-const posterPage = new posterPage();
-let poster;
-let posterName;
+const searchTxb = '[type="text"]';
+const resultRow = '[class="MuiTablePagination-displayedRows css-1chpzqh"]';
+
 
 Given('I login with {string} username and {string} password', function(username, password){
-    loginPage.launchLoginPage();
-    loginPage.enterUsername(username);
-    loginPage.enterPassword(password);
-    loginPage.submitForm();
+    LoginPage.login(username, password);
+})
+
+When('I navigate to Posters page', function (){
+    MainPage.clickMenuSubItem('[href*="#/products"]');
+    cy.contains("Posters").should("be.visible");
+})
+
+And('I search for {string} poster', function (posterName){
+    cy.get(searchTxb).type(posterName);
     cy.wait(1000);
 })
 
-When('I navigate to {string} page', function (pageName){
-    mainPage.clickMenuItem(pageName);
-    cy.contains(pageName).should("be.visible");
-})
-
-And('I click on the third item', function (){
-    poster = posterPage.findElementInList(2);
-    poster = poster.
-    poster.click();
+Then('I verify the search result', function(){
+    cy.get(resultRow).should(
+        "have.text",
+        "1-1 of 1"
+    );
 })
